@@ -3,8 +3,8 @@ package org.leap;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-
-import org.apache.tools.ant.BuildException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
 import com.sforce.soap.partner.DescribeSObjectResult;
@@ -34,19 +34,31 @@ public class SFieldsTask extends LeapTask {
 		System.out.println("Generating SObjectFields.cls file for " + recordCount + " objects...");
 		
 		String fieldContent = this.getSFieldEntries();
-		String finalOutput = this.getClassTemplate().decodedContent().replace(MERGE_TEMPLATE_TAG, fieldContent);
+		// class template misses "class" keyword, add it by replace
+		String finalOutput = this.getClassTemplate().decodedContent()
+				.replaceFirst("public with sharing" , "public with sharing class")
+				.replace(MERGE_TEMPLATE_TAG, fieldContent);
 		
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(this.getProjectRoot() + "classes/SObjectFields.cls", "UTF-8");
+			String classFileName = this.getProjectRoot() + "classes/SObjectFields.cls";
+			writer = new PrintWriter(classFileName, "UTF-8");
 			writer.write( finalOutput );
 			writer.close();
-			System.out.println("Created " + this.getProjectRoot() + "classes/SObjectFields.cls");
-						
-			writer = new PrintWriter(this.getProjectRoot() + "classes/SObjectFields.cls-meta.xml", "UTF-8");
+			System.out.println("Created " + classFileName);
+			
+			String metaFileName = this.getProjectRoot() + "classes/SObjectFields.cls-meta.xml";
+			writer = new PrintWriter(metaFileName, "UTF-8");
 			writer.write( this.getMetaTemplate().decodedContent() );
 			writer.close();
-			System.out.println("Created " + this.getProjectRoot() + "classes/SObjectFields.cls-meta.xml");
+			System.out.println("Created " + metaFileName);
+			
+			if (deployOption) {
+				List<String> generatedFiles = new ArrayList<String>();
+				generatedFiles.add(classFileName);
+				generatedFiles.add(metaFileName);
+				deployGeneratedFiles(generatedFiles);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

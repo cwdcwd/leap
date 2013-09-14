@@ -1,7 +1,10 @@
 package org.leap;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
+import com.sforce.soap.metadata.MetadataConnection;
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
 import com.sforce.ws.ConnectionException;
@@ -66,6 +69,13 @@ public class LeapTask extends Task {
     	namespace = ns;
     }
     
+    // By default the generated files are deployed.
+    // set it to false if don't want to deploy
+    protected Boolean deployOption = true;
+    public void setDeploy(Boolean deploy) {
+    	deployOption = deploy;
+    }
+    
     private SalesforceConnection m_salesforceConnection = null;
     public SalesforceConnection salesforceConnection(){
     	if(m_salesforceConnection == null){
@@ -106,5 +116,20 @@ public class LeapTask extends Task {
 			m_sobjectResults = describeGlobalResult.getSobjects();
 		}
 		return m_sobjectResults;
+	}
+	
+	// deploy the generated files with Metadata connection
+	protected void deployGeneratedFiles(List<String> metadataFiles) {
+		
+		MetadataConnection metadataConnection = salesforceConnection().getMetadataConnection();
+
+		try {
+			MetadataDeployer metadataDeployer = new MetadataDeployer(api, metadataConnection);
+			metadataDeployer.deployMetadataFiles(metadataFiles);
+		} catch(Exception e) {
+			System.out.println("Deploying files failed with "+ e.getMessage() +", deploy is aborted");
+//			e.printStackTrace();
+		}
+    	
 	}
 }
