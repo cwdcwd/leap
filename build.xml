@@ -31,8 +31,7 @@
 	<target name="leapmetadiff">
 		<leap:leapmetadiff username="${sf.dev.username}" password="${sf.dev.password}" token="${sf.dev.token}" serverurl="${sf.dev.url}"
 			srcUsername="${sf.src.username}" srcPassword="${sf.src.password}" srcToken="${sf.src.token}" srcServerurl="${sf.src.url}" 
-			srcFolder="${src.folder}" destFolder="${dest.folder}" outFolder="${out.folder}"
-		/>
+			srcFolder="${src.folder}" destFolder="${dest.folder}" outFolder="${out.folder}" />
 	</target>
 			
     <target name="pushdev">
