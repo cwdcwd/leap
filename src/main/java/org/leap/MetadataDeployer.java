@@ -90,7 +90,8 @@ public class MetadataDeployer {
 					String objectName = filename.split("[.]")[0];
 					members.add(objectName);
 				}
-				byte[] bytes = readFileInBytes(filePath);
+				File file = new File(filePath);
+				byte[] bytes = LeapUtils.readFileInBytes(file);
 				addFileToZipFile(objectPath, bytes, zos);
 			} else {
 				System.out.println("Not supported type: "+type);
@@ -132,27 +133,27 @@ public class MetadataDeployer {
 	}
 
 	// read the generated file and return byte[]
-	private byte[] readFileInBytes(String filePath) throws IOException {
-		byte[] result = null;
-		File file = new File(filePath);
-		if (!file.exists() || !file.isFile()) {
-			throw new IOException("Cannot find the zip file for deploy() on path:"+ filePath);
-		}
-
-		FileInputStream inputStream = new FileInputStream(file);
-		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			byte[] buffer = new byte[4096];
-			int bytesRead = 0;
-			while (-1 != (bytesRead = inputStream.read(buffer))) {
-				bos.write(buffer, 0, bytesRead);
-			}
-			result = bos.toByteArray();
-		} finally {
-			inputStream.close();
-		}
-		return result;
-	}
+//	private byte[] readFileInBytes(String filePath) throws IOException {
+//		byte[] result = null;
+//		File file = new File(filePath);
+//		if (!file.exists() || !file.isFile()) {
+//			throw new IOException("Cannot find the zip file for deploy() on path:"+ filePath);
+//		}
+//
+//		FileInputStream inputStream = new FileInputStream(file);
+//		try {
+//			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//			byte[] buffer = new byte[4096];
+//			int bytesRead = 0;
+//			while (-1 != (bytesRead = inputStream.read(buffer))) {
+//				bos.write(buffer, 0, bytesRead);
+//			}
+//			result = bos.toByteArray();
+//		} finally {
+//			inputStream.close();
+//		}
+//		return result;
+//	}
 
 	// add file to the zip file
 	private ZipEntry addFileToZipFile(String filename, byte[] input, ZipOutputStream zos) throws IOException {

@@ -59,6 +59,26 @@ public class LeapTask extends Task {
     	serverurl = url;
     }
     
+	String srcUsername;
+    public void setSrcUsername(String uname) {
+    	srcUsername = uname;
+    }
+    
+    String srcPassword;
+    public void setSrcPassword(String pw) {
+    	srcPassword = pw;
+    }
+    
+    String srcToken;
+    public void setSrcToken(String t) {
+    	srcToken = t;
+    }
+    
+    String srcServerurl;
+    public void setSrcServerurl(String url) {
+    	srcServerurl = url;
+    }
+    
     String api = "28.0";
     public void setApi(String apiVersion){
     	api = apiVersion;
