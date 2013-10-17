@@ -22,7 +22,6 @@ From the command line of any Salesforce development environment:
 	<li>leapsfields: Generates a class of static fields for all SObjects</li>
 	<li>leaptriggers: Generates triggers and Apex trigger handler class(es) for SObjects</li>
 	<li>leapwrappers: Generates wrapper class(es) (in development)</li>
-	<li>leapmetadiff: Generates a metadiff between source folder and dest folder to output folder</li>
 </ul>
 
 <h2>Getting started</h2>
@@ -30,7 +29,7 @@ From the command line of any Salesforce development environment:
 	<li>Download and copy bin/ant-leap.jar into the local Ant library folder (on a Mac this is located at /usr/share/ant/lib).</li>
 	<li>Create build.properties and build.xml files within the root of any Salesforce development project (see example templates below).</li>
 	<li>Enter Salesforce development credentials into build.properties.
-	<li>To test, type "ant leapsfields" to run the leap task that builds a class of a field names.
+	<li>To test, type "ant leapsfields" to run the leap task that builds a class of field names.
 </ul>
 
 <h2>Example build.properties</h2>
@@ -55,19 +54,6 @@ From the command line of any Salesforce development environment:
 	sf.prod.username = 
 	sf.prod.password = 
 	sf.prod.url = https://login.salesforce.com
-	
-	# Specify the login credentials for the source Salesforce organization for metadiff task. 
-	# The sf.dev.* params are used for destination organization. Currently these source and destination
-	# credentials are not used. Instead the metadiff taks operates on local folders.
-	sf.src.username =
-	sf.src.password =
-	sf.src.token = 
-	sf.src.url = 
-	
-	# Specify the source, destination and output folder for metadiff task
-	src.folder =
-	dest.folder = 
-	out.folder = 
 </pre>
 
 <h2>Example build.xml</h2>
@@ -88,11 +74,6 @@ From the command line of any Salesforce development environment:
 
 	&lt;target name="leapwrappers"&gt;
 		&lt;leap:leapwrappers username="${sf.dev.username}" password="${sf.dev.password}" token="${sf.dev.token}" serverurl="${sf.dev.url}" /&gt;
-	&lt;/target&gt;
-		&lt;target name="leapwrappers"&gt;
-		&lt;leap:leapwrappers username="${sf.dev.username}" password="${sf.dev.password}" token="${sf.dev.token}" serverurl="${sf.dev.url}" 
-			srcUsername="${sf.src.username}" srcPassword="${sf.src.password}" srcToken="${sf.src.token}" srcServerurl="${sf.src.url}"
-			srcFolder="${src.folder}" destFolder="${dest.folder}" outFolder="${out.folder}" /&gt;
 	&lt;/target&gt;
 &lt;/project&gt;
 </pre>

@@ -28,7 +28,7 @@ public class TriggerTask extends LeapTask {
 			String classTemplate = this.getLeapClassTemplate().content;
 			classTemplate	= classTemplate.replace("{{object_name}}", this.sObjects()[i].getName())
 						.replace("{{class_name}}", this.sObjects()[i].getName());
-						
+			
 			PrintWriter writer = null;
 			try {
 				//TODO: Check if these will overwrite

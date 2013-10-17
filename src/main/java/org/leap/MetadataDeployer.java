@@ -2,8 +2,6 @@ package org.leap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 import com.sforce.soap.metadata.AsyncRequestState;
 import com.sforce.soap.metadata.AsyncResult;
 import com.sforce.soap.metadata.CodeCoverageWarning;
+import com.sforce.soap.metadata.DeployDetails;
 import com.sforce.soap.metadata.DeployMessage;
 import com.sforce.soap.metadata.DeployOptions;
 import com.sforce.soap.metadata.DeployResult;
@@ -115,7 +114,7 @@ public class MetadataDeployer {
 
 		// check status, display success or error message
 		asyncResult = waitForCompletion(asyncResult);
-		DeployResult result = metadataConnection.checkDeployStatus(asyncResult.getId());
+		DeployResult result = metadataConnection.checkDeployStatus(asyncResult.getId(), true);
 		
 		if (!result.isSuccess()) {
 			printErrors(result);
@@ -239,10 +238,11 @@ public class MetadataDeployer {
 		return asyncResult;
 	}
 
-	private void printErrors(DeployResult result) {
-		DeployMessage messages[] = result.getMessages();
+	private void printErrors(DeployResult deployResult) {
+		DeployDetails details = deployResult.getDetails();
+		
 		StringBuilder stringBuilder = new StringBuilder("Failures:\n");
-		for (DeployMessage message : messages) {
+		for (DeployMessage message : details.getComponentFailures()) {
 			if (!message.isSuccess()) {
 				String loc = "(" + message.getLineNumber() + ", " + message.getColumnNumber();
 				if (loc.length() == 0 && !message.getFileName().equals(message.getFullName()))
@@ -253,7 +253,7 @@ public class MetadataDeployer {
 						+ message.getProblem()).append('\n');
 			}
 		}
-		RunTestsResult rtr = result.getRunTestResult();
+		RunTestsResult rtr = details.getRunTestResult();
 		if (rtr.getFailures() != null) {
 			for (RunTestFailure failure : rtr.getFailures()) {
 				String n = (failure.getNamespace() == null ? "" :

@@ -10,13 +10,14 @@ import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
 public class SalesforceConnection {
+	public static final String API_VERSION	= "29.0";
 	private final String SFDC_USERNAME; 
     private final String SFDC_PASSWORD; 
     private final String SFDC_TOKEN;
     private final String SFDC_URL;
     
-    private final String SFDC_TEST_URL = "https://test.salesforce.com/services/Soap/u/27.0";
-    private final String SFDC_PROD_URL = "https://login.salesforce.com/services/Soap/u/27.0";
+    private final String SFDC_TEST_URL = "https://test.salesforce.com/services/Soap/u/" + API_VERSION;
+    private final String SFDC_PROD_URL = "https://login.salesforce.com/services/Soap/u/" + API_VERSION;
     
 	private final LoginResult loginResult;
 	private final PartnerConnection partnerConnection;
@@ -26,8 +27,7 @@ public class SalesforceConnection {
 		this.SFDC_USERNAME 	= username;
 		this.SFDC_PASSWORD 	= password;
 		this.SFDC_TOKEN		= token;
-		// TODO: strip last '/' char from serverUrl
-		this.SFDC_URL		= serverUrl + "/services/Soap/u/28.0";
+		this.SFDC_URL		= serverUrl + "/services/Soap/u/" + API_VERSION;
 				
 		this.loginResult = this.loginToSalesforce();
 		this.partnerConnection = createPartnerConnection(this.loginResult);

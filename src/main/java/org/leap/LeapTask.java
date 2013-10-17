@@ -79,7 +79,7 @@ public class LeapTask extends Task {
     	srcServerurl = url;
     }
     
-    String api = "28.0";
+    String api = SalesforceConnection.API_VERSION;
     public void setApi(String apiVersion){
     	api = apiVersion;
     }

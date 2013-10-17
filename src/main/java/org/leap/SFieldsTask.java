@@ -34,9 +34,7 @@ public class SFieldsTask extends LeapTask {
 		System.out.println("Generating SObjectFields.cls file for " + recordCount + " objects...");
 		
 		String fieldContent = this.getSFieldEntries();
-		// class template misses "class" keyword, add it by replace
 		String finalOutput = this.getClassTemplate().decodedContent()
-				.replaceFirst("public with sharing" , "public with sharing class")
 				.replace(MERGE_TEMPLATE_TAG, fieldContent);
 		
 		PrintWriter writer = null;
