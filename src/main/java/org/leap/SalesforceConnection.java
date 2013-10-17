@@ -20,6 +20,7 @@ public class SalesforceConnection {
     
 	private final LoginResult loginResult;
 	private final PartnerConnection partnerConnection;
+	private final MetadataConnection metadataConnection;
 	
 	public SalesforceConnection(String username, String password, String token, String serverUrl) throws ConnectionException{
 		this.SFDC_USERNAME 	= username;
@@ -30,6 +31,7 @@ public class SalesforceConnection {
 				
 		this.loginResult = this.loginToSalesforce();
 		this.partnerConnection = createPartnerConnection(this.loginResult);
+		this.metadataConnection = createMetadataConnection(this.loginResult);
 	}
 	
 	public SalesforceConnection(String username, String password, String token, OrgType type) throws ConnectionException{
@@ -40,6 +42,7 @@ public class SalesforceConnection {
 		
 		this.loginResult = this.loginToSalesforce();
 		this.partnerConnection = createPartnerConnection(this.loginResult);
+		this.metadataConnection = createMetadataConnection(this.loginResult);
 	}
 	
 	public SalesforceConnection(URL url, String sessionId) throws ConnectionException{
@@ -55,6 +58,7 @@ public class SalesforceConnection {
         config.setServiceEndpoint(url.toExternalForm());
         config.setSessionId(sessionId);
         this.partnerConnection = new PartnerConnection(config);
+        this.metadataConnection = null;	//TODO fix this
 	}
 	
 	private LoginResult loginToSalesforce() throws ConnectionException {
@@ -72,12 +76,24 @@ public class SalesforceConnection {
         return new PartnerConnection(config);
     }
 	
+	// create metadata connection for deploy
+	private MetadataConnection createMetadataConnection(final LoginResult loginResult) throws ConnectionException {
+		ConnectorConfig metadataConfig = new ConnectorConfig();
+		metadataConfig.setSessionId(loginResult.getSessionId());
+		metadataConfig.setServiceEndpoint(loginResult.getMetadataServerUrl());
+		return com.sforce.soap.metadata.Connector.newConnection(metadataConfig);
+	}
+	
 	public LoginResult getLoginResult(){
 		return this.loginResult;
 	}
 	
 	public PartnerConnection getPartnerConnection(){
 		return this.partnerConnection;
+	}
+	
+	public MetadataConnection getMetadataConnection(){
+		return this.metadataConnection;
 	}
 	
 	public boolean isValid(){
