@@ -23,37 +23,37 @@ public class TriggerTask extends LeapTask {
 			
 			String triggerTemplate = this.getLeapTriggerTemplate().content;
 			triggerTemplate	= triggerTemplate.replace("{{object_name}}", this.sObjects()[i].getName())
-						.replace("{{class_name}}", this.sObjects()[i].getName());
+						.replace("{{class_name}}", formattedName(sObjects()[i].getName()));
 			
 			String classTemplate = this.getLeapClassTemplate().content;
-			classTemplate	= classTemplate.replace("{{object_name}}", this.sObjects()[i].getName())
-						.replace("{{class_name}}", this.sObjects()[i].getName());
+			classTemplate	= classTemplate.replace("{{object_name}}", sObjects()[i].getName())
+						.replace("{{class_name}}", formattedName(sObjects()[i].getName()));
 			
 			PrintWriter writer = null;
 			try {
 				//TODO: Check if these will overwrite
-				String triggerFileName = this.getProjectRoot() + "triggers/" + this.sObjects()[i].getName() + "Trigger.trigger";
+				String triggerFileName = this.getProjectRoot() + "triggers/" + formattedName(this.sObjects()[i].getName()) + "Trigger.trigger";
 				generatedFiles.add(triggerFileName);
 				writer = new PrintWriter(triggerFileName, "UTF-8");
 				writer.write( triggerTemplate );
 				writer.close();
 				System.out.println("Created " + triggerFileName);
 				
-				String triggerMetaFileName = this.getProjectRoot() + "triggers/" + this.sObjects()[i].getName() + "Trigger.trigger-meta.xml";
+				String triggerMetaFileName = this.getProjectRoot() + "triggers/" + formattedName(this.sObjects()[i].getName()) + "Trigger.trigger-meta.xml";
 				generatedFiles.add(triggerMetaFileName);
 				writer = new PrintWriter(triggerMetaFileName, "UTF-8");
 				writer.write( this.getLeapMetaTriggerTemplate().content );
 				writer.close();
 				System.out.println("Created " + triggerMetaFileName);
 				
-				String handlerFileName = this.getProjectRoot() + "classes/" + this.sObjects()[i].getName() + "TriggerHandler.cls";
+				String handlerFileName = this.getProjectRoot() + "classes/" + formattedName(this.sObjects()[i].getName()) + "TriggerHandler.cls";
 				generatedFiles.add(handlerFileName);
 				writer = new PrintWriter(handlerFileName, "UTF-8");
 				writer.write( classTemplate );
 				writer.close();
 				System.out.println("Created " + handlerFileName);
 				
-				String handlerMetaFileName = this.getProjectRoot() + "classes/" + this.sObjects()[i].getName() + "TriggerHandler.cls-meta.xml";
+				String handlerMetaFileName = this.getProjectRoot() + "classes/" + formattedName(this.sObjects()[i].getName()) + "TriggerHandler.cls-meta.xml";
 				generatedFiles.add(handlerMetaFileName);
 				writer = new PrintWriter(handlerMetaFileName, "UTF-8");
 				writer.write( this.getLeapMetaClassTemplate().content );
@@ -70,6 +70,10 @@ public class TriggerTask extends LeapTask {
 		if (deployOption) {
 			deployGeneratedFiles(generatedFiles);
 		}
+	}
+	
+	private String formattedName(String name){
+		return name.replaceAll("__c", "").replaceAll("_", "");
 	}
 	
 	private LeapTemplate m_leapClassTemplate = null;

@@ -94,7 +94,7 @@ public class SFieldsTask extends LeapTask {
 		String output = "";
 		Integer counter = 0;		
 		for (int i = 0; i < this.sObjects().length; i++) {
-			if(this.customOnly && this.sObjects()[i].isCustom()){ continue;}
+			//if(this.customOnly && this.sObjects()[i].isCustom()){ continue;}
 			if(this.limit != -1 && counter++ > this.limit){ break;}
 			
 			String object_name = "ALL_" + this.getObjectName(this.sObjects()[i]) + "_FIELDS";

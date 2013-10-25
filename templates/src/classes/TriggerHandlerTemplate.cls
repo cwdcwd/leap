@@ -2,7 +2,7 @@
 	private boolean m_isExecuting = false;
 	private integer BatchSize = 0;
 	
-	public {{object_name}}TriggerHandler(boolean isExecuting, integer size){
+	public {{class_name}}TriggerHandler(boolean isExecuting, integer size){
 		m_isExecuting = isExecuting;
 		BatchSize = size;
 	}
